@@ -62,6 +62,10 @@ func main() {
 		p.Whitelist = strings.Split(*whitelist, ",")
 	}
 
+	if *secret != "" {
+		p.Secret = *secret
+	}
+
 	server := &http.Server{
 		Addr:    *addr,
 		Handler: p,

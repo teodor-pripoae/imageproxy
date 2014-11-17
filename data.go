@@ -124,8 +124,10 @@ func ParseOptions(str string) *Options {
 }
 
 type Request struct {
-	URL     *url.URL // URL of the image to proxy
-	Options *Options // Image transformation to perform
+	URL       *url.URL // URL of the image to proxy
+	Options   *Options // Image transformation to perform
+	Signature string   // Request signature
+	FullPath  string   // full path like 200x200/http://placeholder.it/200x200
 }
 
 // NewRequest parses an http.Request into an image request.
@@ -136,8 +138,16 @@ func NewRequest(r *http.Request) (*Request, error) {
 	path := r.URL.Path[1:] // strip leading slash
 	req.URL, err = url.Parse(path)
 	if err != nil || !req.URL.IsAbs() {
-		// first segment is likely options
+		// first segment is always the signature
 		parts := strings.SplitN(path, "/", 2)
+		if len(parts) != 2 {
+			return nil, URLError{"signature is missing", r.URL}
+		}
+
+		req.Signature, req.FullPath = parts[0], parts[1]
+
+		// now, first segment is likely options
+		parts = strings.SplitN(req.FullPath, "/", 2)
 		if len(parts) != 2 {
 			return nil, URLError{"too few path segments", r.URL}
 		}

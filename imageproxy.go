@@ -13,11 +13,15 @@
 // limitations under the License.
 
 // Package proxy provides the image proxy.
-package imageproxy 
+package imageproxy
 
 import (
 	"bufio"
 	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/base64"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -38,6 +42,8 @@ type Proxy struct {
 
 	// Whitelist specifies a list of remote hosts that images can be proxied from.  An empty list means all hosts are allowed.
 	Whitelist []string
+
+	Secret string // secret token to decrypt signatures
 }
 
 // NewProxy constructs a new proxy.  The provided http Client will be used to
@@ -78,6 +84,13 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = p.checkSignature(req)
+
+	if err != nil {
+		glog.Errorf("invalid request (not signed correctly)", req.URL)
+		http.Error(w, fmt.Sprintf("request not correctly signed: url => %v, signature => %v", req.URL, req.Signature), http.StatusBadRequest)
+	}
+
 	u := req.URL.String()
 	if req.Options != nil && !reflect.DeepEqual(req.Options, emptyOptions) {
 		u += "#" + req.Options.String()
@@ -107,6 +120,34 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 	io.Copy(w, resp.Body)
 }
+
+func CheckMAC(message, messageMAC, key []byte) bool {
+	mac := hmac.New(sha256.New, key)
+	mac.Write(message)
+	expectedMAC := mac.Sum(nil)
+	return hmac.Equal(messageMAC, expectedMAC)
+}
+
+func (p *Proxy) checkSignature(r *Request) error {
+	if p.Secret == "" {
+		return nil
+	}
+
+	decodedSignature, err := base64.StdEncoding.DecodeString(strings.Replace(r.Signature, "-", "/", -1))
+
+	if (err != nil) {
+		return errors.New("signature is not correctly encoded in base64")
+	}
+
+	correct := CheckMAC([]byte(r.FullPath), decodedSignature, []byte(p.Secret))
+
+	if correct {
+	    return nil
+	} else{
+	    return errors.New("incorrect signature")
+	}
+}
+
 
 // allowed returns whether the specified URL is on the whitelist of remote hosts.
 func (p *Proxy) allowed(u *url.URL) bool {
