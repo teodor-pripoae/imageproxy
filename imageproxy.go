@@ -89,6 +89,7 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		glog.Errorf("invalid request (not signed correctly)", req.URL)
 		http.Error(w, fmt.Sprintf("request not correctly signed: url => %v, signature => %v", req.URL, req.Signature), http.StatusBadRequest)
+		return
 	}
 
 	u := req.URL.String()
