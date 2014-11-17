@@ -39,6 +39,7 @@ var (
 var addr = flag.String("addr", "localhost:8080", "TCP address to listen on")
 var whitelist = flag.String("whitelist", "", "comma separated list of allowed remote hosts")
 var cacheDir = flag.String("cacheDir", "", "directory to use for file cache")
+var secret = flag.String("secret", "", "secret token used to sign http requests")
 var version = flag.Bool("version", false, "print version information")
 
 func main() {
