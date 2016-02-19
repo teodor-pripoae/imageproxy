@@ -1,0 +1,37 @@
+{
+	"ImportPath": "github.com/teodor-pripoae/imageproxy",
+	"GoVersion": "go1.6",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/disintegration/imaging",
+			"Rev": "83458641eee6acad19ca0a4c0a3365bfd3de46c7"
+		},
+		{
+			"ImportPath": "github.com/golang/glog",
+			"Rev": "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
+		},
+		{
+			"ImportPath": "github.com/gregjones/httpcache",
+			"Rev": "41d86b9a933145e18725742ea18326021220a8d6"
+		},
+		{
+			"ImportPath": "github.com/petar/GoLLRB/llrb",
+			"Rev": "53be0d36a84c2a886ca057d34b6aa4468df9ccb4"
+		},
+		{
+			"ImportPath": "github.com/peterbourgon/diskv",
+			"Rev": "f2c8925fb5e0e9614e23499efa68df1924ba6add"
+		},
+		{
+			"ImportPath": "golang.org/x/image/bmp",
+			"Rev": "7c492694a6443a92fd349fda0c4c7b587040f161"
+		},
+		{
+			"ImportPath": "golang.org/x/image/tiff",
+			"Rev": "7c492694a6443a92fd349fda0c4c7b587040f161"
+		}
+	]
+}

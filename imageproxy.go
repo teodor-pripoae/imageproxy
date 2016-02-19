@@ -31,8 +31,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang/glog"
-	"github.com/gregjones/httpcache"
+	"github.com/teodor-pripoae/imageproxy/Godeps/_workspace/src/github.com/golang/glog"
+	"github.com/teodor-pripoae/imageproxy/Godeps/_workspace/src/github.com/gregjones/httpcache"
 )
 
 // Proxy serves image requests.
@@ -136,19 +136,18 @@ func (p *Proxy) checkSignature(r *Request) error {
 
 	decodedSignature, err := base64.StdEncoding.DecodeString(strings.Replace(r.Signature, "-", "/", -1))
 
-	if (err != nil) {
+	if err != nil {
 		return errors.New("signature is not correctly encoded in base64")
 	}
 
 	correct := CheckMAC([]byte(r.FullPath), decodedSignature, []byte(p.Secret))
 
 	if correct {
-	    return nil
-	} else{
-	    return errors.New("incorrect signature")
+		return nil
+	} else {
+		return errors.New("incorrect signature")
 	}
 }
-
 
 // allowed returns whether the specified URL is on the whitelist of remote hosts.
 func (p *Proxy) allowed(u *url.URL) bool {

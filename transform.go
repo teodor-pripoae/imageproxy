@@ -22,7 +22,7 @@ import (
 	"image/png"
 	"reflect"
 
-	"github.com/disintegration/imaging"
+	"github.com/teodor-pripoae/imageproxy/Godeps/_workspace/src/github.com/disintegration/imaging"
 )
 
 // Transform the provided image.

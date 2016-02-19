@@ -22,10 +22,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/gregjones/httpcache"
-	"github.com/gregjones/httpcache/diskcache"
 	"github.com/teodor-pripoae/imageproxy"
-	"github.com/peterbourgon/diskv"
+	"github.com/teodor-pripoae/imageproxy/Godeps/_workspace/src/github.com/gregjones/httpcache"
+	"github.com/teodor-pripoae/imageproxy/Godeps/_workspace/src/github.com/gregjones/httpcache/diskcache"
+	"github.com/teodor-pripoae/imageproxy/Godeps/_workspace/src/github.com/peterbourgon/diskv"
 )
 
 // goxc values
