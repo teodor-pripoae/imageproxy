@@ -1,3 +1,5 @@
 build
 .goxc.local.json
 *.test
+/bin
+/release
